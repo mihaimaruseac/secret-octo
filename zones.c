@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 	parse_arguments(argc, argv);
 	print_args();
 
-	space = gen_space(args.sz);
+	space = space_gen(args.sz);
 	space_print(space);
 
 	free_space(space);

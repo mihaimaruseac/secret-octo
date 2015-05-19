@@ -12,7 +12,7 @@ enum space_tile {
 	dontcare,
 };
 
-struct space *gen_space(int sz);
+struct space *space_gen(int sz);
 void space_print(struct space *space);
 void free_space(struct space *space);
 

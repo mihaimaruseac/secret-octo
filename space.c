@@ -5,7 +5,7 @@
 
 static inline char expand(char v);
 
-struct space *gen_space(int sz)
+struct space *space_gen(int sz)
 {
 	struct space *space = calloc(1, sizeof(*space));
 	int i;
