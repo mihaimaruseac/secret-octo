@@ -3,8 +3,6 @@
 
 #include "space.h"
 
-static inline char expand(char v);
-
 struct space *space_gen(int sz)
 {
 	struct space *space = calloc(1, sizeof(*space));
@@ -28,17 +26,6 @@ void free_space(struct space *space)
 	free(space);
 }
 
-void space_print(struct space *space)
-{
-	int i, j;
-
-	for (i = 0; i < space->sz; i++) {
-		for (j = 0; j < space->sz; j++)
-			printf("%c", expand(space->data[i][j]));
-		printf("\n");
-	}
-}
-
 static inline char expand(char v)
 {
 	char expand_vec[] = {'.', '*', '-', '?'};
@@ -48,4 +35,15 @@ static inline char expand(char v)
 		v = s - 1;
 
 	return expand_vec[v];
+}
+
+void space_print(struct space *space)
+{
+	int i, j;
+
+	for (i = 0; i < space->sz; i++) {
+		for (j = 0; j < space->sz; j++)
+			printf("%c", expand(space->data[i][j]));
+		printf("\n");
+	}
 }
