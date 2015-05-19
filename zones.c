@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "space.h"
+
 /* min, max space size (log scale) */
 #define MIN_SZ 2
 #define MAX_SZ 20
@@ -90,8 +92,13 @@ static void parse_arguments(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+	struct space *space;
+
 	parse_arguments(argc, argv);
 	print_args();
 
+	space = gen_space(args.sz);
+
+	free_space(space);
 	return 0;
 }

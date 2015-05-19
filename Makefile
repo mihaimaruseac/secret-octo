@@ -4,7 +4,7 @@ TARGET = ./zones
 CC = gcc
 CFLAGS = -Wall -Wextra -g -O0
 LDFLAGS = -lm
-OBJS = 
+OBJS = space.o
 
 all: $(TARGET)
 
