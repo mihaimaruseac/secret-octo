@@ -98,6 +98,7 @@ int main(int argc, char **argv)
 	print_args();
 
 	space = gen_space(args.sz);
+	space_print(space);
 
 	free_space(space);
 	return 0;
