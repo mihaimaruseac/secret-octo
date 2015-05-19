@@ -7,9 +7,9 @@ struct space {
 };
 
 enum space_tile {
-	empty = 0;
-	danger = 1;
-	dontcare = 2;
+	empty,
+	danger,
+	dontcare,
 };
 
 struct space *gen_space(int sz);

@@ -41,7 +41,7 @@ void space_print(struct space *space)
 
 static inline char expand(char v)
 {
-	char expand_vec[] = {'.', '*', '?'};
+	char expand_vec[] = {'.', '*', '-', '?'};
 	int s = sizeof(expand_vec) / sizeof(expand_vec[0]);
 
 	if (0 > v || v >= s)
