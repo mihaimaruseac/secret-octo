@@ -64,6 +64,7 @@ void space_generate_zone(struct space *space, float coverage, long int seed)
 	space->data[x][y] = danger;
 
 	/* fill */
+	/* TODO: use reservoir sampling instead */
 	for (k = 1; k < cells_to_fill; k++) {
 		s = 0;
 
