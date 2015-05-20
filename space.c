@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "globals.h"
 #include "space.h"
 
 struct space *space_gen(int sz)
@@ -50,6 +51,26 @@ void space_print(struct space *space)
 void space_generate_zone(struct space *space, float coverage, long int seed)
 {
 	int cells_to_fill = space->sz * space->sz * coverage;
+	struct drand48_data randbuffer;
+	int *x, *y, k = 0;
 
-	printf("Need to fill: %d\n", cells_to_fill);
+	init_rng(seed, &randbuffer);
+
+	x = calloc(cells_to_fill, sizeof(*x));
+	y = calloc(cells_to_fill, sizeof(*y));
+
+	printf("%d %d %d %d %d %d %d %d %d %d\n",
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer),
+			random_int_pow2(space->sz, &randbuffer));
+
+	free(x);
+	free(y);
 }
