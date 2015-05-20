@@ -29,6 +29,13 @@ int random_int_pow2(int max, struct drand48_data *buffer)
 	return ret & (max - 1);
 }
 
+int random_int(int max, struct drand48_data *buffer)
+{
+	double v;
+	drand48_r(buffer, &v);
+	return max * v;
+}
+
 int int_cmp(const void *a, const void *b)
 {
 	const int *ia = a, *ib = b;

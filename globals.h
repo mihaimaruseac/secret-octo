@@ -42,6 +42,9 @@ void init_rng(long int seed, struct drand48_data *buffer);
 /* call only if max is a power of 2 */
 int random_int_pow2(int max, struct drand48_data *buffer);
 
+/* this one is a generic randomint between 0 and max */
+int random_int(int max, struct drand48_data *buffer);
+
 /* Laplace mechanism */
 double laplace_mechanism(double x, double eps, double sens,
 		struct drand48_data *buffer);
