@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -52,25 +53,39 @@ void space_generate_zone(struct space *space, float coverage, long int seed)
 {
 	int cells_to_fill = space->sz * space->sz * coverage;
 	struct drand48_data randbuffer;
-	int *x, *y, k = 0;
+	int x, y, i, j, k;
+	double s, v;
 
 	init_rng(seed, &randbuffer);
 
-	x = calloc(cells_to_fill, sizeof(*x));
-	y = calloc(cells_to_fill, sizeof(*y));
+	/* seed */
+	x = random_int_pow2(space->sz, &randbuffer);
+	y = random_int_pow2(space->sz, &randbuffer);
+	space->data[x][y] = danger;
 
-	printf("%d %d %d %d %d %d %d %d %d %d\n",
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer),
-			random_int_pow2(space->sz, &randbuffer));
+	/* fill */
+	for (k = 1; k < cells_to_fill; k++) {
+		s = 0;
 
-	free(x);
-	free(y);
+		for (i = 0; i < space->sz; i++)
+			for (j = 0; j < space->sz; j++) {
+				if (space->data[i][j] == danger)
+					continue;
+				s += exp(-sqrt((i - x) * (i - x) + (j - y) * (j - y)));
+			}
+
+		drand48_r(&randbuffer, &v);
+		s *= v;
+
+		for (i = 0; i < space->sz; i++)
+			for (j = 0; j < space->sz; j++) {
+				if (space->data[i][j] == danger)
+					continue;
+				s -= exp(-sqrt((i - x) * (i - x) + (j - y) * (j - y)));
+				if (s < 0) {
+					space->data[i][j] = danger;
+					i = j = space->sz;
+				}
+			}
+	}
 }
