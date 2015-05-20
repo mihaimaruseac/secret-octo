@@ -28,13 +28,12 @@ void free_space(struct space *space)
 
 static inline char expand(char v)
 {
-	char expand_vec[] = {'.', '*', '-', '?'};
-	int s = sizeof(expand_vec) / sizeof(expand_vec[0]);
-
-	if (0 > v || v >= s)
-		v = s - 1;
-
-	return expand_vec[v];
+	switch (v) {
+	case empty: return '.';
+	case danger: return '*';
+	case dontcare: return '-';
+	default: return '?';
+	}
 }
 
 void space_print(struct space *space)
