@@ -98,6 +98,7 @@ int main(int argc, char **argv)
 	print_args();
 
 	space = space_gen(args.sz);
+	space_generate_zone(space, args.coverage, args.seed);
 	space_print(space);
 
 	free_space(space);

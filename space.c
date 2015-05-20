@@ -47,3 +47,10 @@ void space_print(struct space *space)
 		printf("\n");
 	}
 }
+
+void space_generate_zone(struct space *space, float coverage, long int seed)
+{
+	int cells_to_fill = space->sz * space->sz * coverage;
+
+	printf("Need to fill: %d\n", cells_to_fill);
+}
