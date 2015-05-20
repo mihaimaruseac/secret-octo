@@ -10,7 +10,7 @@
 
 /* coverage bounds */
 #define MIN_COVERAGE 0.0199999
-#define MAX_COVERAGE 0.1000001
+#define MAX_COVERAGE 0.4000001
 
 /* options as string */
 #define OPTSTR "R:s:c:"
