@@ -62,6 +62,7 @@ static void print_args()
 	printf("Grid side length: %d\n", args.sz);
 	printf("Coverage: %f\n", args.coverage);
 	printf("Seed: %ld\n", args.seed);
+	printf("Extra space: %c\n", args.dc ? 'Y' : 'N');
 	printf("Depth: %f\n", args.depth);
 }
 
@@ -97,6 +98,9 @@ static void parse_arguments(int argc, char **argv)
 		case 'R':
 			if (sscanf(optarg, "%ld%c", &args.seed, &extra) != 1)
 				usage(argv[0]);
+			break;
+		case 'f':
+			args.dc = 1;
 			break;
 		default: usage(argv[0]);
 		}
