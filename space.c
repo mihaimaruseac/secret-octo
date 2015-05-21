@@ -168,7 +168,7 @@ static char* conv(int x, int sz)
 
 void space_2_espresso(struct space *space, FILE *f)
 {
-	int i, j, ig, jg, sz = ffs(space->sz) - 1;
+	int i, j, sz = ffs(space->sz) - 1;
 	char c, *s1, *s2;
 
 	fprintf(f, ".i %d\n", 2 * sz);

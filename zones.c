@@ -17,8 +17,8 @@
 
 /* depth: bounds and coverage */
 #define MIN_DEPTH 0.0999999
-#define MAX_DEPTH 1
-#define DEFAULT_DEPTH 1
+#define MAX_DEPTH 1.0
+#define DEFAULT_DEPTH 1.0
 
 /* options as string */
 #define OPTSTR "R:s:c:d:f"
