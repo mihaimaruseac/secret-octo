@@ -99,7 +99,10 @@ int main(int argc, char **argv)
 
 	space = space_gen(args.sz);
 	space_generate_zone(space, args.coverage, args.seed);
-	space_print(space);
+	space_fill_dc(space);
+	//space_print(space);
+
+	space_2_espresso(space, stdout);
 
 	free_space(space);
 	return 0;
