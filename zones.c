@@ -47,8 +47,8 @@ static void usage(const char *prg)
 	fprintf(stderr, "\t-s sz\tlog(size) of the length of the space (int)\n");
 	fprintf(stderr, "\t-c coverage\tratio of alert zone's area to the area of the space (real)\n");
 	fprintf(stderr, "\t-d depth\tmax expansion depth in percents of the max depth(real, default 1.0)\n");
-	fprintf(stderr, "\t-R seed\tseed of the random number generator, (int, default 42)\n");
-	fprintf(stderr, "\t-f\tgenerate new don't care tiles to help minimization\n");
+	fprintf(stderr, "\t-R seed\t\tseed of the random number generator, (int, default 42)\n");
+	fprintf(stderr, "\t-f\t\tgenerate new don't care tiles to help minimization\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "CONSTRAINTS:\n");
 	fprintf(stderr, "\t%d <= sz <= %d\n", MIN_SZ, MAX_SZ);
