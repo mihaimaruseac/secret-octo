@@ -16,7 +16,7 @@
 #define DEFAULT_SEED 42
 
 /* depth: bounds and coverage */
-#define MIN_DEPTH 0.0999999
+#define MIN_DEPTH 0.0
 #define MAX_DEPTH 1.0
 #define DEFAULT_DEPTH 1.0
 
