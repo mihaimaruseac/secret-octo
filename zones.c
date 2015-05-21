@@ -110,18 +110,18 @@ static void parse_arguments(int argc, char **argv)
 		usage(argv[0]); /* extra arguments */
 
 	if (MIN_SZ > args.sz || args.sz > MAX_SZ) {
-		fprintf(stderr, "Invalid sz argument");
+		fprintf(stderr, "Invalid sz argument\n");
 		usage(argv[0]);
 	} else
 		args.sz = 1 << args.sz;
 
 	if (MIN_COVERAGE > args.coverage || args.coverage > MAX_COVERAGE) {
-		fprintf(stderr, "Invalid coverage argument");
+		fprintf(stderr, "Invalid coverage argument\n");
 		usage(argv[0]);
 	}
 
 	if (MIN_DEPTH > args.depth || args.depth > MAX_DEPTH) {
-		fprintf(stderr, "Invalid depth argument");
+		fprintf(stderr, "Invalid depth argument\n");
 		usage(argv[0]);
 	}
 }
