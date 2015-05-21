@@ -132,11 +132,13 @@ int main(int argc, char **argv)
 
 	parse_arguments(argc, argv);
 	print_args();
-	return 0;
 
 	space = space_gen(args.sz);
 	space_generate_zone(space, args.coverage, args.seed);
-	space_fill_dc(space);
+
+	if (args.dc)
+		space_fill_dc(space, args.depth);
+
 	//space_print(space);
 
 	space_2_espresso(space, stdout);

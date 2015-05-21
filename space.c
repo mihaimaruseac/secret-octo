@@ -93,18 +93,17 @@ void space_generate_zone(struct space *space, float coverage, long int seed)
 	}
 }
 
-void space_fill_dc(struct space *space)
+void space_fill_dc(struct space *space, float depth_ratio)
 {
 	int changed = 1, i, j, cnt, m = space->sz - 1, cover = 0, depth = 0, n;
+	int max_depth = depth_ratio * 2 * space->sz;
 
 	while (changed) {
 		changed = 0;
 		depth++;
 
-#if 1
-		if (depth == 5)
+		if (depth == max_depth)
 			break;
-#endif
 
 		for (i = 0; i < space->sz; i++)
 			for (j = 0; j < space->sz; j++) {
@@ -142,6 +141,7 @@ void space_fill_dc(struct space *space)
 
 	printf("Covered %d cells\n", cover);
 	printf("Depth %d\n", depth);
+	printf("Max depth %d\n", max_depth);
 }
 
 static int gray(int x)
