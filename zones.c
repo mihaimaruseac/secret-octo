@@ -21,7 +21,7 @@
 #define DEFAULT_DEPTH 1
 
 /* options as string */
-#define OPTSTR "R:s:c:d:"
+#define OPTSTR "R:s:c:d:f"
 
 /* Command line arguments */
 static struct {
@@ -31,6 +31,9 @@ static struct {
 	float coverage;
 	/* max depth */
 	float depth;
+
+	/* use don't care */
+	int dc;
 
 	/* random seed */
 	long int seed;
@@ -45,10 +48,12 @@ static void usage(const char *prg)
 	fprintf(stderr, "\t-c coverage\tratio of alert zone's area to the area of the space (real)\n");
 	fprintf(stderr, "\t-d depth\tmax expansion depth in percents of the max depth(real, default 1.0)\n");
 	fprintf(stderr, "\t-R seed\tseed of the random number generator, (int, default 42)\n");
+	fprintf(stderr, "\t-f\tgenerate new don't care tiles to help minimization\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "CONSTRAINTS:\n");
 	fprintf(stderr, "\t%d <= sz <= %d\n", MIN_SZ, MAX_SZ);
 	fprintf(stderr, "\t%f <= coverage <= %f\n", MIN_COVERAGE, MAX_COVERAGE);
+	fprintf(stderr, "\t%f <= depth <= %f\n", MIN_DEPTH, MAX_DEPTH);
 	exit(EXIT_FAILURE);
 }
 
@@ -73,6 +78,7 @@ static void parse_arguments(int argc, char **argv)
 
 	args.seed = DEFAULT_SEED;
 	args.depth = DEFAULT_DEPTH;
+	args.dc = 0;
 
 	while((opt = getopt(argc, argv, OPTSTR)) != -1)
 		switch(opt) {
