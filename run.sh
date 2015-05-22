@@ -9,11 +9,13 @@ espresso="../orig/espresso/espresso -sx -"
 
 for seed in ${seeds}; do
     for size in ${sizes}; do
-        for depth in ${depths}; do
-            for coverage in ${coverages}; do
-                ./zones -s ${size} -c ${coverage} -d ${depth} -R ${seed}    | ${espresso}
+        for coverage in ${coverages}; do
+            ./zones -s ${size} -c ${coverage} -R ${seed}    | ${espresso}
+            for depth in ${depths}; do
                 ./zones -s ${size} -c ${coverage} -d ${depth} -R ${seed} -f | ${espresso}
             done
+            echo ""
+            echo ""
         done
     done
 done
