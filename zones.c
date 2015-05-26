@@ -132,6 +132,7 @@ int main(int argc, char **argv)
 
 	parse_arguments(argc, argv);
 	print_args();
+	/* TODO: separate in different execs in a pipeline */
 
 	space = space_gen(args.sz);
 	space_generate_zone(space, args.coverage, args.seed);
