@@ -17,7 +17,7 @@
 
 /* depth: bounds and coverage */
 #define MIN_DEPTH 0.0
-#define MAX_DEPTH 1.0
+#define MAX_DEPTH 100.0
 #define DEFAULT_DEPTH 1.0
 
 /* options as string */
@@ -129,16 +129,17 @@ static void parse_arguments(int argc, char **argv)
 int main(int argc, char **argv)
 {
 	struct space *space;
+	int c;
 
 	parse_arguments(argc, argv);
 	print_args();
 	/* TODO: separate in different execs in a pipeline */
 
 	space = space_gen(args.sz);
-	space_generate_zone(space, args.coverage, args.seed);
+	c = space_generate_zone(space, args.coverage, args.seed);
 
 	if (args.dc)
-		space_fill_dc(space, args.depth);
+		space_fill_dc(space, args.depth, c);
 
 	//space_print(space);
 

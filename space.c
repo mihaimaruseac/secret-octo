@@ -50,7 +50,7 @@ void space_print(struct space *space)
 	}
 }
 
-void space_generate_zone(struct space *space, float coverage, long int seed)
+int space_generate_zone(struct space *space, float coverage, long int seed)
 {
 	int cells_to_fill = space->sz * space->sz * coverage;
 	struct drand48_data randbuffer;
@@ -91,12 +91,14 @@ void space_generate_zone(struct space *space, float coverage, long int seed)
 				}
 			}
 	}
+
+	return cells_to_fill;
 }
 
-void space_fill_dc(struct space *space, float depth_ratio)
+void space_fill_dc(struct space *space, float depth_ratio, int cells_to_fill)
 {
 	int changed = 1, i, j, cnt, m = space->sz - 1, cover = 0, depth = 0, n;
-	int max_depth = depth_ratio * 2 * space->sz;
+	int max_depth = depth_ratio * sqrt(cells_to_fill);
 
 	while (changed) {
 		changed = 0;
