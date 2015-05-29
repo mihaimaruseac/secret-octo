@@ -137,13 +137,14 @@ int main(int argc, char **argv)
 
 	space = space_gen(args.sz);
 	c = space_generate_zone(space, args.coverage, args.seed);
+	space_print(space);
 
 	if (args.dc)
 		space_fill_dc(space, args.depth, c);
 
 	//space_print(space);
 
-	space_2_espresso(space, stdout);
+	//space_2_espresso(space, stdout);
 
 	free_space(space);
 	return 0;
