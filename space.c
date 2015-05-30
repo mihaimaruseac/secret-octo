@@ -66,8 +66,6 @@ int space_generate_zone(struct space *space, float coverage, long int seed)
 	space->data[x][y] = danger;
 
 	/* fill */
-#if 0
-	/* TODO: use reservoir sampling instead */
 	for (k = 1; k < cells_to_fill; k++) {
 		s = 0;
 
@@ -92,29 +90,6 @@ int space_generate_zone(struct space *space, float coverage, long int seed)
 				}
 			}
 	}
-#else
-	for (k = 1; k < cells_to_fill; k++) {
-		int xi, yi;
-
-		s = 424242424242;
-		xi = yi = 0;
-		for (i = 0; i < space->sz; i++)
-			for (j = 0; j < space->sz; j++) {
-				if (space->data[i][j] == danger)
-					continue;
-				drand48_r(&randbuffer, &v);
-				v = log(log(1/v)) + sqrt((i - x) * (i - x) + (j - y) * (j - y));
-
-				if (v < s) {
-					s = v;
-					xi = i;
-					yi = j;
-				}
-			}
-
-		space->data[xi][yi] = danger;
-	}
-#endif
 
 	return cells_to_fill;
 }
