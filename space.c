@@ -39,14 +39,14 @@ static inline char expand(char v)
 	}
 }
 
-void space_print(struct space *space)
+void space_print(struct space *space, FILE *f)
 {
 	int i, j;
 
 	for (i = 0; i < space->sz; i++) {
 		for (j = 0; j < space->sz; j++)
-			printf("%c", expand(space->data[i][j]));
-		printf("\n");
+			fprintf(f, "%c", expand(space->data[i][j]));
+		fprintf(f, "\n");
 	}
 }
 
