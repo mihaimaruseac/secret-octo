@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "space.h"
@@ -16,7 +17,7 @@
 #define DEFAULT_SEED 42
 
 /* options as string */
-#define OPTSTR "R:s:c:d:f"
+#define OPTSTR "R:s:c:o:"
 
 /* Command line arguments */
 static struct {
@@ -39,6 +40,7 @@ static void usage(const char *prg)
 	fprintf(stderr, "\t-s sz\tlog(size) of the length of the space (int)\n");
 	fprintf(stderr, "\t-c coverage\tratio of alert zone's area to the area of the space (real)\n");
 	fprintf(stderr, "\t-R seed\t\tseed of the random number generator, (int, default 42)\n");
+	fprintf(stderr, "\t-o file\t\toutput zone to this file, \"-\" for stdout\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "CONSTRAINTS:\n");
 	fprintf(stderr, "\t%d <= sz <= %d\n", MIN_SZ, MAX_SZ);
@@ -51,6 +53,7 @@ static void print_args()
 	printf("Grid side length: %d\n", args.sz);
 	printf("Coverage: %f\n", args.coverage);
 	printf("Seed: %ld\n", args.seed);
+	printf("Printing zone to %s\n", args.out);
 }
 
 static void parse_arguments(int argc, char **argv)
@@ -65,6 +68,7 @@ static void parse_arguments(int argc, char **argv)
 	printf("\n");
 
 	args.seed = DEFAULT_SEED;
+	args.out = NULL;
 
 	while((opt = getopt(argc, argv, OPTSTR)) != -1)
 		switch(opt) {
@@ -79,6 +83,9 @@ static void parse_arguments(int argc, char **argv)
 		case 'R':
 			if (sscanf(optarg, "%ld%c", &args.seed, &extra) != 1)
 				usage(argv[0]);
+			break;
+		case 'o':
+			args.out = strdup(optarg);
 			break;
 		default: usage(argv[0]);
 		}
@@ -95,6 +102,11 @@ static void parse_arguments(int argc, char **argv)
 
 	if (MIN_COVERAGE > args.coverage || args.coverage > MAX_COVERAGE) {
 		fprintf(stderr, "Invalid coverage argument\n");
+		usage(argv[0]);
+	}
+
+	if (args.out == NULL) {
+		fprintf(stderr, "Need output file. Use \"-\" for stdout\n");
 		usage(argv[0]);
 	}
 }
