@@ -10,12 +10,16 @@
 #define DEFAULT_DEPTH 1.0
 
 /* options as string */
-#define OPTSTR "d:"
+#define OPTSTR "d:i:o:"
 
 /* Command line arguments */
 static struct {
 	/* max depth */
 	float depth;
+	/* file to read the zone from */
+	char *in;
+	/* file to write the zone to */
+	char *out;
 } args;
 
 static void usage(const char *prg)
@@ -24,6 +28,8 @@ static void usage(const char *prg)
 	fprintf(stderr, "\n");
 	fprintf(stderr, "OPTIONS:\n");
 	fprintf(stderr, "\t-d depth\tmax expansion depth in percents of the max depth(real, default 1.0)\n");
+	fprintf(stderr, "\t-i file\t\tfile to read zone from, \"-\" for stdin\n");
+	fprintf(stderr, "\t-o file\t\toutput zone to this file, \"-\" for stdout\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "CONSTRAINTS:\n");
 	fprintf(stderr, "\t%f <= depth <= %f\n", MIN_DEPTH, MAX_DEPTH);
@@ -47,12 +53,20 @@ static void parse_arguments(int argc, char **argv)
 	printf("\n");
 
 	args.depth = DEFAULT_DEPTH;
+	args.in = NULL;
+	args.out = NULL;
 
 	while((opt = getopt(argc, argv, OPTSTR)) != -1)
 		switch(opt) {
 		case 'd':
 			if (sscanf(optarg, "%f%c", &args.depth, &extra) != 1)
 				usage(argv[0]);
+			break;
+		case 'i':
+			args.in = strdup(optarg);
+			break;
+		case 'o':
+			args.out = strdup(optarg);
 			break;
 		default: usage(argv[0]);
 		}
@@ -63,6 +77,16 @@ static void parse_arguments(int argc, char **argv)
 
 	if (MIN_DEPTH > args.depth || args.depth > MAX_DEPTH) {
 		fprintf(stderr, "Invalid depth argument\n");
+		usage(argv[0]);
+	}
+
+	if (args.in == NULL) {
+		fprintf(stderr, "Need input file. Use \"-\" for stdin\n");
+		usage(argv[0]);
+	}
+
+	if (args.out == NULL) {
+		fprintf(stderr, "Need output file. Use \"-\" for stdout\n");
 		usage(argv[0]);
 	}
 }
@@ -90,6 +114,8 @@ int main(int argc, char **argv)
 	//space_2_espresso(space, stdout);
 #endif
 
+	free(args.in);
+	free(args.out);
 	free_space(space);
 	return 0;
 }
