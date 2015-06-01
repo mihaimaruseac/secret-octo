@@ -1,7 +1,8 @@
 .PHONY: all clean
 
 GEN = ./gen
-TARGETS = $(GEN) ./zones
+COVER = ./cover
+TARGETS = $(GEN) $(COVER) ./zones
 CC = gcc
 CFLAGS = -Wall -Wextra -g -O0
 LDFLAGS = -lm
@@ -11,5 +12,7 @@ all: $(TARGETS)
 
 $(GEN): $(OBJS)
 
+$(COVER): $(OBJS)
+
 clean:
-	@$(RM) $(OBJS) $(TARGET) $(NPTARGET)
+	@$(RM) $(OBJS) $(TARGETS)
