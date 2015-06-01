@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "space.h"
@@ -91,6 +92,40 @@ static void parse_arguments(int argc, char **argv)
 	}
 }
 
+static struct space* load(int *covered)
+{
+	struct space *space;
+	FILE *f;
+
+	if (strncmp(args.in, "-", 1) == 0)
+		f = stdin;
+	else if (!(f = fopen(args.in, "r"))) {
+		perror("Invalid input file");
+		exit(EXIT_FAILURE);
+	}
+
+	space = space_load(&covered, f);
+
+	fclose(f);
+	return space;
+}
+
+static void save(struct space* space)
+{
+	FILE *f;
+
+	if (strncmp(args.out, "-", 1) == 0)
+		f = stdout;
+	else if (!(f = fopen(args.out, "w"))) {
+		perror("Invalid output file");
+		exit(EXIT_FAILURE);
+	}
+
+	space_print(space, f);
+
+	fclose(f);
+}
+
 int main(int argc, char **argv)
 {
 	struct space *space;
@@ -98,6 +133,8 @@ int main(int argc, char **argv)
 
 	parse_arguments(argc, argv);
 	print_args();
+
+	space = load(&c);
 
 #if 0
 	/* TODO: separate in different execs in a pipeline */
@@ -113,6 +150,8 @@ int main(int argc, char **argv)
 
 	//space_2_espresso(space, stdout);
 #endif
+
+	save(space);
 
 	free(args.in);
 	free(args.out);

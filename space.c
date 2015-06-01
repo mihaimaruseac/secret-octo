@@ -19,6 +19,10 @@ struct space *space_gen(int sz)
 	return space;
 }
 
+struct space *space_load(int *covered, FILE *f)
+{
+}
+
 void free_space(struct space *space)
 {
 	int i;
