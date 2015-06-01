@@ -40,6 +40,8 @@ static void usage(const char *prg)
 static void print_args()
 {
 	printf("Depth: %f\n", args.depth);
+	printf("Reading zone from %s\n", args.in);
+	printf("Printing zone to %s\n", args.out);
 }
 
 static void parse_arguments(int argc, char **argv)
@@ -104,7 +106,7 @@ static struct space* load(int *covered)
 		exit(EXIT_FAILURE);
 	}
 
-	space = space_load(&covered, f);
+	space = space_load(covered, f);
 
 	fclose(f);
 	return space;

@@ -2,7 +2,7 @@
 
 GEN = ./gen
 COVER = ./cover
-TARGETS = $(GEN) $(COVER) ./zones
+TARGETS = $(GEN) $(COVER) #./zones
 CC = gcc
 CFLAGS = -Wall -Wextra -g -O0
 LDFLAGS = -lm

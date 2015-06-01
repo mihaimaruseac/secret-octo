@@ -6,6 +6,26 @@
 #include "globals.h"
 #include "space.h"
 
+static inline char expand(char v)
+{
+	switch (v) {
+	case empty: return '.';
+	case danger: return '*';
+	case dontcare: return '-';
+	default: return '0' + v;//'?';
+	}
+}
+
+static inline char unexpand(char v)
+{
+	switch (v) {
+	case '.': return empty;
+	case '*': return danger;
+	case '-': return dontcare;
+	default: return v - '0';//'?';
+	}
+}
+
 struct space *space_gen(int sz)
 {
 	struct space *space = calloc(1, sizeof(*space));
@@ -19,8 +39,46 @@ struct space *space_gen(int sz)
 	return space;
 }
 
+#define SZ 10
 struct space *space_load(int *covered, FILE *f)
 {
+	struct space *space = calloc(1, sizeof(*space));
+	char c, line[SZ];
+	int i, j;
+
+	fscanf(f, "%d", &space->sz);
+	space->data = calloc(space->sz, sizeof(*space->data));
+	for (i = 0; i < space->sz; i++)
+		space->data[i] = calloc(space->sz, sizeof(**space->data));
+
+	for (i = 0; i < space->sz; i++) {
+		fscanf(f, "%c", &c);
+		for (j = 0; j < space->sz; j++) {
+			fscanf(f, "%c", &c);
+			space->data[i][j] = unexpand(c);
+		}
+	}
+
+	*covered = 0;
+	for (i = 0; i < space->sz; i++)
+		for (j = 0; j < space->sz; j++)
+			if (space->data[i][j] == danger)
+				*covered++;
+
+	return space;
+}
+#undef SZ
+
+void space_print(struct space *space, FILE *f)
+{
+	int i, j;
+
+	fprintf(f, "%d\n", space->sz);
+	for (i = 0; i < space->sz; i++) {
+		for (j = 0; j < space->sz; j++)
+			fprintf(f, "%c", expand(space->data[i][j]));
+		fprintf(f, "\n");
+	}
 }
 
 void free_space(struct space *space)
@@ -31,27 +89,6 @@ void free_space(struct space *space)
 		free(space->data[i]);
 	free(space->data);
 	free(space);
-}
-
-static inline char expand(char v)
-{
-	switch (v) {
-	case empty: return '.';
-	case danger: return '*';
-	case dontcare: return '-';
-	default: return '0' + v;//'?';
-	}
-}
-
-void space_print(struct space *space, FILE *f)
-{
-	int i, j;
-
-	for (i = 0; i < space->sz; i++) {
-		for (j = 0; j < space->sz; j++)
-			fprintf(f, "%c", expand(space->data[i][j]));
-		fprintf(f, "\n");
-	}
 }
 
 int space_generate_zone(struct space *space, float coverage, long int seed)
