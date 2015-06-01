@@ -137,22 +137,7 @@ int main(int argc, char **argv)
 	print_args();
 
 	space = load(&c);
-
-#if 0
-	/* TODO: separate in different execs in a pipeline */
-
-	space = space_gen(args.sz);
-	c = space_generate_zone(space, args.coverage, args.seed);
-	space_print(space);
-
-	if (args.dc)
-		space_fill_dc(space, args.depth, c);
-
-	//space_print(space);
-
-	//space_2_espresso(space, stdout);
-#endif
-
+	space_fill_dc(space, args.depth, c);
 	save(space);
 
 	free(args.in);
