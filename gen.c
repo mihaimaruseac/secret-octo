@@ -114,6 +114,7 @@ static void parse_arguments(int argc, char **argv)
 int main(int argc, char **argv)
 {
 	struct space *space;
+	FILE *f;
 	int c;
 
 	parse_arguments(argc, argv);
@@ -121,8 +122,17 @@ int main(int argc, char **argv)
 
 	space = space_gen(args.sz);
 	c = space_generate_zone(space, args.coverage, args.seed);
-	space_print(space, stdout);
 
+	if (strncmp(args.out, "-", 1) == 0)
+		f = stdout;
+	else if (!(f = fopen(args.out, "w"))) {
+		perror("Invalid output file");
+		usage(argv[0]);
+	}
+
+	space_print(space, f);
+
+	fclose(f);
 	free(args.out);
 	free_space(space);
 	return 0;
