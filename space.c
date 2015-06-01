@@ -43,7 +43,7 @@ struct space *space_gen(int sz)
 struct space *space_load(int *covered, FILE *f)
 {
 	struct space *space = calloc(1, sizeof(*space));
-	char c, line[SZ];
+	char c;
 	int i, j;
 
 	fscanf(f, "%d", &space->sz);
@@ -59,11 +59,14 @@ struct space *space_load(int *covered, FILE *f)
 		}
 	}
 
+	if (!covered)
+		return space;
+
 	*covered = 0;
 	for (i = 0; i < space->sz; i++)
 		for (j = 0; j < space->sz; j++)
 			if (space->data[i][j] == danger)
-				*covered++;
+				*covered = *covered + 1;
 
 	return space;
 }

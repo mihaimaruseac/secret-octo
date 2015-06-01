@@ -115,13 +115,12 @@ int main(int argc, char **argv)
 {
 	struct space *space;
 	FILE *f;
-	int c;
 
 	parse_arguments(argc, argv);
 	print_args();
 
 	space = space_gen(args.sz);
-	c = space_generate_zone(space, args.coverage, args.seed);
+	space_generate_zone(space, args.coverage, args.seed);
 
 	if (strncmp(args.out, "-", 1) == 0)
 		f = stdout;
