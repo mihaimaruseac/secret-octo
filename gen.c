@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,7 @@
 #define DEFAULT_SEED 42
 
 /* options as string */
-#define OPTSTR "R:s:c:o:"
+#define OPTSTR "R:s:S:c:o:"
 
 /* Command line arguments */
 static struct {
@@ -38,6 +39,7 @@ static void usage(const char *prg)
 	fprintf(stderr, "\n");
 	fprintf(stderr, "OPTIONS:\n");
 	fprintf(stderr, "\t-s sz\tlog(size) of the length of the space (int)\n");
+	fprintf(stderr, "\t-S sz\tsize of the space (int, overrides -s)\n");
 	fprintf(stderr, "\t-c coverage\tratio of alert zone's area to the area of the space (real)\n");
 	fprintf(stderr, "\t-R seed\t\tseed of the random number generator, (int, default 42)\n");
 	fprintf(stderr, "\t-o file\t\toutput zone to this file, \"-\" for stdout\n");
@@ -58,9 +60,8 @@ static void print_args()
 
 static void parse_arguments(int argc, char **argv)
 {
+	int opt, i, S = 0;
 	char extra;
-	int opt;
-	int i;
 
 	printf("Called with: argc=%d\n", argc);
 	for (i = 0; i < argc; i++)
@@ -74,6 +75,10 @@ static void parse_arguments(int argc, char **argv)
 		switch(opt) {
 		case 's':
 			if (sscanf(optarg, "%d%c", &args.sz, &extra) != 1)
+				usage(argv[0]);
+			break;
+		case 'S':
+			if (sscanf(optarg, "%d%c", &S, &extra) != 1)
 				usage(argv[0]);
 			break;
 		case 'c':
@@ -94,11 +99,18 @@ static void parse_arguments(int argc, char **argv)
 	if (optind != argc)
 		usage(argv[0]); /* extra arguments */
 
-	if (MIN_SZ > args.sz || args.sz > MAX_SZ) {
-		fprintf(stderr, "Invalid sz argument\n");
-		usage(argv[0]);
-	} else
-		args.sz = 1 << args.sz;
+	if (!S)
+		if (MIN_SZ > args.sz || args.sz > MAX_SZ) {
+			fprintf(stderr, "Invalid sz argument\n");
+			usage(argv[0]);
+		} else
+			args.sz = 1 << args.sz;
+	else
+		if (MIN_SZ > log2(S) || log2(S) > MAX_SZ) {
+			fprintf(stderr, "Invalid Sz argument\n");
+			usage(argv[0]);
+		} else
+			args.sz = S;
 
 	if (MIN_COVERAGE > args.coverage || args.coverage > MAX_COVERAGE) {
 		fprintf(stderr, "Invalid coverage argument\n");
