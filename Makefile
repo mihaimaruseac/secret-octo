@@ -4,10 +4,13 @@ GEN = ./gen
 COVER = ./cover
 ESPRESSO = ./espresso
 COMPUTE = ./compute
-TARGETS = $(GEN) $(COVER) $(ESPRESSO) $(COMPUTE)
+PARAMGEN = ./param_generator
+TARGETS = $(GEN) $(COVER) $(ESPRESSO) $(COMPUTE) $(PARAMGEN)
+
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O0
-LDFLAGS = -lm
+CFLAGS = -I/usr/local/include/pbc -Wall -Wextra -g -O0
+LDFLAGS = -lm -lgmp -lpbc
+
 OBJS = space.o globals.o
 
 all: $(TARGETS)
@@ -16,6 +19,7 @@ $(GEN): $(OBJS)
 $(COVER): $(OBJS)
 $(ESPRESSO): $(OBJS)
 $(COMPUTE): $(OBJS)
+$(PARAMGEN): $(OBJS)
 
 clean:
 	@$(RM) $(OBJS) $(TARGETS)
