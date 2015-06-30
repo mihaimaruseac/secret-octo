@@ -6,12 +6,15 @@
 #include "crypto.h"
 
 /* options as string */
-#define OPTSTR "i:"
+#define OPTSTR "i:cp"
 
 /* Command line arguments */
 static struct {
 	/* file to read the zone from */
 	char *in;
+	/* flags */
+	int use_caching;
+	int use_product;
 } args;
 
 static void usage(const char *prg)
@@ -20,12 +23,16 @@ static void usage(const char *prg)
 	fprintf(stderr, "\n");
 	fprintf(stderr, "OPTIONS:\n");
 	fprintf(stderr, "\t-i file\t\tfile to read espresso output from, \"-\" for stdin\n");
+	fprintf(stderr, "\t-c\t\tuse caching optimization -- pairing_pp_apply\n");
+	fprintf(stderr, "\t-p\t\tuse product optimization -- element_prod_pairing\n");
 	exit(EXIT_FAILURE);
 }
 
 static void print_args()
 {
 	printf("Reading espresso output from %s\n", args.in);
+	printf("Caching: %s\n", args.use_caching ? "YES" : "NO");
+	printf("Fast product: %s\n", args.use_product ? "YES" : "NO");
 }
 
 static void parse_arguments(int argc, char **argv)
@@ -39,11 +46,19 @@ static void parse_arguments(int argc, char **argv)
 	printf("\n");
 
 	args.in = NULL;
+	args.use_caching = 0;
+	args.use_product = 0;
 
 	while((opt = getopt(argc, argv, OPTSTR)) != -1)
 		switch(opt) {
 		case 'i':
 			args.in = strdup(optarg);
+			break;
+		case 'c':
+			args.use_caching = 1;
+			break;
+		case 'p':
+			args.use_product = 1;
 			break;
 		default: usage(argv[0]);
 		}
