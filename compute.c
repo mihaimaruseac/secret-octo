@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 
 	pbc = init_pbc();
 	nse = load(&tl, &ts);
-	pbc_decrypt(pbc, tl, nse, ts);
+	pbc_decrypt(pbc, tl, nse, ts, args.use_caching, args.use_product);
 
 	clean_pbc(pbc);
 	free(args.in);

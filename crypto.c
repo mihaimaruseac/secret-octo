@@ -43,7 +43,8 @@ void clean_pbc(struct crypto *pbc)
 	free(pbc);
 }
 
-void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts)
+void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts,
+		int use_caching, int use_product)
 {
 	/* e(C_0, K_0) -> pairing(C, K[i])
 	 * e(C_{i1}, K_{i1}) -> pairing(Ci[i], Ki[i])
@@ -85,24 +86,37 @@ void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts)
 	/* ------------------ decryption ------------------ */
 	gettimeofday(&st, NULL);
 	/* e(C0, K0) across all tokens */
-	/* TODO: pairing_pp_apply optimization */
-	for (i = 0; i < ts; i++)
-		pairing_apply(R, C, K[i], pbc->pairing);
+	if (use_caching) {
+		pairing_pp_t pp;
+		pairing_pp_init(pp, C, pbc->pairing);
+		for (i = 0; i < ts; i++)
+			pairing_pp_apply(R, K[i], pp);
+		pairing_pp_clear(pp);
+	} else
+		for (i = 0; i < ts; i++)
+			pairing_apply(R, C, K[i], pbc->pairing);
+
 	/* prod{e(Ci1, Ki1)}prod{e(Ci2, Ki2)} across all tokens */
-	/* TODO: element_prod_pairing optimization */
-	for (i = 0; i < ts; i++) {
-		element_set1(A);
-		for (j = 0; j < nse[i]; j++) {
-			element_pairing(T, Ci[j], Ki[j]);
-			element_mul(A, A, T);
+	if (use_product) {
+		for (i = 0; i < ts; i++) {
+			element_prod_pairing(A, Ci, Ki, nse[i]);
+			element_prod_pairing(B, Ci, Ki, nse[i]);
+			element_mul(M, A, B);
 		}
-		element_set1(B);
-		for (j = 0; j < nse[i]; j++) {
-			element_pairing(T, Ci[j], Ki[j]);
-			element_mul(B, B, T);
+	} else
+		for (i = 0; i < ts; i++) {
+			element_set1(A);
+			for (j = 0; j < nse[i]; j++) {
+				element_pairing(T, Ci[j], Ki[j]);
+				element_mul(A, A, T);
+			}
+			element_set1(B);
+			for (j = 0; j < nse[i]; j++) {
+				element_pairing(T, Ci[j], Ki[j]);
+				element_mul(B, B, T);
+			}
+			element_mul(M, A, B);
 		}
-		element_mul(M, A, B);
-	}
 	gettimeofday(&en, NULL);
 	printf("Decryption: %lu us\n", time_diff(&st, &en));
 
