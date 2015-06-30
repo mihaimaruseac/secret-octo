@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
 
 #include "globals.h"
 #include "space.h"
@@ -214,7 +213,7 @@ static char* conv(int x, int sz, int hierarchical)
 
 void space_2_espresso(struct space *space, FILE *f, int hierarchical)
 {
-	int i, j, sz = ffs(space->sz) - 1;
+	int i, j, sz = lnp2(space->sz);
 	char c, *s1, *s2;
 
 	fprintf(f, ".i %d\n", 2 * sz);

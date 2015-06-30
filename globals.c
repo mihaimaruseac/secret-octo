@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 #include <sys/time.h>
 
 #include "globals.h"
@@ -101,4 +102,16 @@ inline long time_diff(struct timeval *tv1, struct timeval *tv2)
 	long t1 = tv1->tv_sec * MICROSECONDS + (0.0 + tv1->tv_usec);
 	long t2 = tv2->tv_sec * MICROSECONDS + (0.0 + tv2->tv_usec);
 	return t2 - t1;
+}
+
+inline int lnp2(int x)
+{
+	x--;
+	x |= x >> 1;
+	x |= x >> 2;
+	x |= x >> 4;
+	x |= x >> 8;
+	x |= x >> 16;
+	x++;
+	return ffs(x) - 1;
 }
