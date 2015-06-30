@@ -117,7 +117,7 @@ end:
 int main(int argc, char **argv)
 {
 	struct crypto *pbc;
-	int tl, ts, i;
+	int tl, ts;
 	int *nse;
 
 	parse_arguments(argc, argv);
@@ -125,6 +125,7 @@ int main(int argc, char **argv)
 
 	pbc = init_pbc();
 	nse = load(&tl, &ts);
+	pbc_decrypt(pbc, tl, nse, ts);
 
 	clean_pbc(pbc);
 	free(args.in);

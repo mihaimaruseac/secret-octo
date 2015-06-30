@@ -7,4 +7,6 @@ struct crypto;
 struct crypto* init_pbc();
 void clean_pbc(struct crypto *pbc);
 
+void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts);
+
 #endif
