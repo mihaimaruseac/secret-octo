@@ -5,6 +5,7 @@
 #include <pbc.h>
 
 #include "crypto.h"
+#include "globals.h"
 
 struct crypto {
 	pairing_t pairing;
@@ -48,11 +49,11 @@ void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts)
 	 * e(C_{i1}, K_{i1}) -> pairing(Ci[i], Ki[i])
 	 * e(C_{i2}, K_{i2}) -> pairing(Ci[i], Ki[i])
 	 */
-	element_t C, K[ts], Ci[tl], Ki[tl];
+	element_t C, K[ts], Ci[tl], Ki[tl], R, A, B, M, T;
 	struct timeval st, en;
-	int i;
+	int i, j;
 
-	/* setup */
+	/* -------------------- setup --------------------- */
 	gettimeofday(&st, NULL);
 	element_init_G1(C, pbc->pairing);
 	element_random(C);
@@ -68,6 +69,11 @@ void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts)
 		element_init_G2(Ki[i], pbc->pairing);
 		element_random(Ki[i]);
 	}
+	element_init_GT(R, pbc->pairing);
+	element_init_GT(A, pbc->pairing);
+	element_init_GT(B, pbc->pairing);
+	element_init_GT(M, pbc->pairing);
+	element_init_GT(T, pbc->pairing);
 	gettimeofday(&en, NULL);
 	printf("Setup: %lu us\n", time_diff(&st, &en));
 
@@ -76,6 +82,37 @@ void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts)
 		printf("%d ", nse[i]);
 	printf("\n");
 
+	/* ------------------ decryption ------------------ */
+	gettimeofday(&st, NULL);
+	/* e(C0, K0) across all tokens */
+	/* TODO: pairing_pp_apply optimization */
+	for (i = 0; i < ts; i++)
+		pairing_apply(R, C, K[i], pbc->pairing);
+	/* prod{e(Ci1, Ki1)}prod{e(Ci2, Ki2)} across all tokens */
+	/* TODO: element_prod_pairing optimization */
+	for (i = 0; i < ts; i++) {
+		element_set1(A);
+		for (j = 0; j < nse[i]; j++) {
+			element_pairing(T, Ci[j], Ki[j]);
+			element_mul(A, A, T);
+		}
+		element_set1(B);
+		for (j = 0; j < nse[i]; j++) {
+			element_pairing(T, Ci[j], Ki[j]);
+			element_mul(B, B, T);
+		}
+		element_mul(M, A, B);
+	}
+	gettimeofday(&en, NULL);
+	printf("Decryption: %lu us\n", time_diff(&st, &en));
+
+	/* ------------------- cleanup -------------------- */
+	gettimeofday(&st, NULL);
+	element_clear(T);
+	element_clear(M);
+	element_clear(B);
+	element_clear(A);
+	element_clear(R);
 	element_clear(C);
 	for (i = 0; i < ts; i++)
 		element_clear(K[i]);
@@ -83,4 +120,6 @@ void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts)
 		element_clear(Ci[i]);
 	for (i = 0; i < tl; i++)
 		element_clear(Ki[i]);
+	gettimeofday(&en, NULL);
+	printf("Cleanup: %lu us\n", time_diff(&st, &en));
 }
