@@ -6,7 +6,7 @@
 #include "space.h"
 
 /* options as string */
-#define OPTSTR "i:o:"
+#define OPTSTR "i:o:h"
 
 /* Command line arguments */
 static struct {
@@ -14,6 +14,8 @@ static struct {
 	char *in;
 	/* file to write the espresso input to */
 	char *out;
+	/* flags */
+	int hierarchical;
 } args;
 
 static void usage(const char *prg)
@@ -23,6 +25,7 @@ static void usage(const char *prg)
 	fprintf(stderr, "OPTIONS:\n");
 	fprintf(stderr, "\t-i file\t\tfile to read zone from, \"-\" for stdin\n");
 	fprintf(stderr, "\t-o file\t\toutput input to espresso to this file, \"-\" for stdout\n");
+	fprintf(stderr, "\t-h\t\tgenerate hierarchical encoding instead of gray\n");
 	exit(EXIT_FAILURE);
 }
 
@@ -30,6 +33,7 @@ static void print_args()
 {
 	printf("Reading zone from %s\n", args.in);
 	printf("Printing to espresso to %s\n", args.out);
+	printf("Hierarchical: %s\n", args.hierarchical ? "YES" : "NO");
 }
 
 static void parse_arguments(int argc, char **argv)
@@ -44,6 +48,7 @@ static void parse_arguments(int argc, char **argv)
 
 	args.in = NULL;
 	args.out = NULL;
+	args.hierarchical = 0;
 
 	while((opt = getopt(argc, argv, OPTSTR)) != -1)
 		switch(opt) {
@@ -52,6 +57,9 @@ static void parse_arguments(int argc, char **argv)
 			break;
 		case 'o':
 			args.out = strdup(optarg);
+			break;
+		case 'h':
+			args.hierarchical = 1;
 			break;
 		default: usage(argv[0]);
 		}
@@ -89,7 +97,7 @@ static struct space* load(int *covered)
 	return space;
 }
 
-static void save_2_espresso(struct space* space)
+static void save_2_espresso(struct space* space, int hierarchical)
 {
 	FILE *f;
 
@@ -100,7 +108,7 @@ static void save_2_espresso(struct space* space)
 		exit(EXIT_FAILURE);
 	}
 
-	space_2_espresso(space, f);
+	space_2_espresso(space, f, hierarchical);
 
 	fclose(f);
 }
@@ -113,7 +121,7 @@ int main(int argc, char **argv)
 	print_args();
 
 	space = load(NULL);
-	save_2_espresso(space);
+	save_2_espresso(space, args.hierarchical);
 
 	free(args.in);
 	free(args.out);

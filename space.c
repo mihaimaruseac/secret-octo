@@ -194,11 +194,12 @@ static int gray(int x)
 	return (x >> 1) ^ x;
 }
 
-static char* conv(int x, int sz)
+static char* conv(int x, int sz, int hierarchical)
 {
 	char *ret = calloc(sz--, sizeof(*ret));
 
-	x = gray(x);
+	if (!hierarchical)
+		x = gray(x);
 
 	while (x) {
 		ret[sz--] = '0' + (x & 1);
@@ -211,7 +212,7 @@ static char* conv(int x, int sz)
 	return ret;
 }
 
-void space_2_espresso(struct space *space, FILE *f)
+void space_2_espresso(struct space *space, FILE *f, int hierarchical)
 {
 	int i, j, sz = ffs(space->sz) - 1;
 	char c, *s1, *s2;
@@ -226,8 +227,8 @@ void space_2_espresso(struct space *space, FILE *f)
 			default: continue;
 			}
 
-			s1 = conv(i, sz);
-			s2 = conv(j, sz);
+			s1 = conv(i, sz, hierarchical);
+			s2 = conv(j, sz, hierarchical);
 			fprintf(f, "%s%s %c\n", s1, s2, c);
 			free(s1);
 			free(s2);
