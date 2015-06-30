@@ -59,4 +59,6 @@ int bsearch_i(const void *key, const void *base, size_t nmemb, size_t size,
 /* divide x by y only if y is at least t (avoid noisy division by 0 */
 inline double noisy_div(double x, double y, double t);
 
+struct timeval;
+inline long time_diff(struct timeval *tv1, struct timeval *tv2);
 #endif

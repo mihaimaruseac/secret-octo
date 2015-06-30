@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "globals.h"
 
@@ -92,4 +93,12 @@ inline double noisy_div(double x, double y, double t)
 	if (y <= t)
 		return 0;
 	return x/y;
+}
+
+#define MICROSECONDS 1000000L
+inline long time_diff(struct timeval *tv1, struct timeval *tv2)
+{
+	long t1 = tv1->tv_sec * MICROSECONDS + (0.0 + tv1->tv_usec);
+	long t2 = tv2->tv_sec * MICROSECONDS + (0.0 + tv2->tv_usec);
+	return t2 - t1;
 }
