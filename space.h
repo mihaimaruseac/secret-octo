@@ -15,7 +15,8 @@ enum space_tile {
 struct space *space_gen(int sz);
 struct space *space_load(int *covered, FILE *f);
 void space_print(struct space *space, FILE *f);
-int space_generate_zone(struct space *space, float coverage, long int seed);
+int space_generate_zone(struct space *space, float coverage, long int seed,
+		int uniform);
 void space_fill_dc(struct space *space, float depth_ratio, int cells_to_fill);
 void free_space(struct space *space);
 

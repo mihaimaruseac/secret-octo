@@ -93,7 +93,8 @@ void free_space(struct space *space)
 	free(space);
 }
 
-int space_generate_zone(struct space *space, float coverage, long int seed)
+int space_generate_zone(struct space *space, float coverage, long int seed,
+		int uniform)
 {
 	int cells_to_fill = space->sz * space->sz * coverage;
 	struct drand48_data randbuffer;
@@ -116,7 +117,7 @@ int space_generate_zone(struct space *space, float coverage, long int seed)
 			for (j = 0; j < space->sz; j++) {
 				if (space->data[i][j] == danger)
 					continue;
-				s += exp(-sqrt((i - x) * (i - x) + (j - y) * (j - y)));
+				s += uniform ? 1 : exp(-sqrt((i - x) * (i - x) + (j - y) * (j - y)));
 			}
 
 		drand48_r(&randbuffer, &v);
@@ -126,7 +127,7 @@ int space_generate_zone(struct space *space, float coverage, long int seed)
 			for (j = 0; j < space->sz; j++) {
 				if (space->data[i][j] == danger)
 					continue;
-				s -= exp(-sqrt((i - x) * (i - x) + (j - y) * (j - y)));
+				s -= uniform ? 1 : exp(-sqrt((i - x) * (i - x) + (j - y) * (j - y)));
 				if (s < 0) {
 					space->data[i][j] = danger;
 					i = j = space->sz;

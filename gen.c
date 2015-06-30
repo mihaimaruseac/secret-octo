@@ -18,7 +18,7 @@
 #define DEFAULT_SEED 42
 
 /* options as string */
-#define OPTSTR "R:s:S:c:o:"
+#define OPTSTR "R:s:S:c:o:u"
 
 /* Command line arguments */
 static struct {
@@ -31,6 +31,9 @@ static struct {
 
 	/* random seed */
 	long int seed;
+
+	/* flag */
+	int uniform;
 } args;
 
 static void usage(const char *prg)
@@ -43,6 +46,7 @@ static void usage(const char *prg)
 	fprintf(stderr, "\t-c coverage\tratio of alert zone's area to the area of the space (real)\n");
 	fprintf(stderr, "\t-R seed\t\tseed of the random number generator, (int, default 42)\n");
 	fprintf(stderr, "\t-o file\t\toutput zone to this file, \"-\" for stdout\n");
+	fprintf(stderr, "\t-u\t\tgenerate from uniform distribution instead of gaussian\n");
 	fprintf(stderr, "\n");
 	fprintf(stderr, "CONSTRAINTS:\n");
 	fprintf(stderr, "\t%d <= sz <= %d\n", MIN_SZ, MAX_SZ);
@@ -56,6 +60,7 @@ static void print_args()
 	printf("Coverage: %f\n", args.coverage);
 	printf("Seed: %ld\n", args.seed);
 	printf("Printing zone to %s\n", args.out);
+	printf("Uniform distribution: %s\n", args.uniform ? "YES" : "NO");
 }
 
 static void parse_arguments(int argc, char **argv)
@@ -69,6 +74,7 @@ static void parse_arguments(int argc, char **argv)
 	printf("\n");
 
 	args.seed = DEFAULT_SEED;
+	args.uniform = 0;
 	args.out = NULL;
 
 	while((opt = getopt(argc, argv, OPTSTR)) != -1)
@@ -91,6 +97,9 @@ static void parse_arguments(int argc, char **argv)
 			break;
 		case 'o':
 			args.out = strdup(optarg);
+			break;
+		case 'u':
+			args.uniform = 1;
 			break;
 		default: usage(argv[0]);
 		}
@@ -132,7 +141,7 @@ int main(int argc, char **argv)
 	print_args();
 
 	space = space_gen(args.sz);
-	space_generate_zone(space, args.coverage, args.seed);
+	space_generate_zone(space, args.coverage, args.seed, args.uniform);
 
 	if (strncmp(args.out, "-", 1) == 0)
 		f = stdout;
