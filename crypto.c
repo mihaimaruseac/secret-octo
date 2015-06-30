@@ -7,8 +7,6 @@
 
 struct crypto {
 	pairing_t pairing;
-	mpz_t p;
-	mpz_t q;
 };
 
 struct crypto* init_pbc()
@@ -34,28 +32,11 @@ struct crypto* init_pbc()
 	pairing_init_set_buf(pbc->pairing, param, count);
 	free(param);
 	fclose(fp);
-
-	fp = fopen("factoring", "rb");
-	if (!fp) {
-faulty_file:
-		perror("Cannot load pbc factoring");
-		exit(EXIT_FAILURE);
-	}
-
-	if (!mpz_inp_str(pbc->p, fp, 10))
-		goto faulty_file;
-	if (!mpz_inp_str(pbc->q, fp, 10))
-		goto faulty_file;
-
-	fclose(fp);
-
 	return pbc;
 }
 
 void clean_pbc(struct crypto *pbc)
 {
-	mpz_clear(pbc->p);
-	mpz_clear(pbc->q);
 	pairing_clear(pbc->pairing);
 	free(pbc);
 }
