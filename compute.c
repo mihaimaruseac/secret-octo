@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "space.h"
+#include "crypto.h"
 
 /* options as string */
 #define OPTSTR "i:"
@@ -116,19 +116,17 @@ end:
 
 int main(int argc, char **argv)
 {
+	struct crypto *pbc;
 	int tl, ts, i;
 	int *nse;
 
 	parse_arguments(argc, argv);
 	print_args();
 
+	pbc = init_pbc();
 	nse = load(&tl, &ts);
 
-	printf("Read %d tokens of length %d\n", ts, tl);
-	for (i = 0; i < ts; i++)
-		printf("%d ", nse[i]);
-	printf("\n");
-
+	clean_pbc(pbc);
 	free(args.in);
 	free(nse);
 	return 0;

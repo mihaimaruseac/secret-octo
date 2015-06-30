@@ -11,7 +11,7 @@ CC = gcc
 CFLAGS = -I/usr/local/include/pbc -Wall -Wextra -g -O0
 LDFLAGS = -lm -lgmp -lpbc
 
-OBJS = space.o globals.o
+OBJS = space.o globals.o crypto.o
 
 all: $(TARGETS)
 
