@@ -99,6 +99,7 @@ void pbc_decrypt(struct crypto *pbc, int tl, int *nse, int ts,
 	/* prod{e(Ci1, Ki1)}prod{e(Ci2, Ki2)} across all tokens */
 	if (use_product) {
 		for (i = 0; i < ts; i++) {
+			if (!nse[i])continue;
 			element_prod_pairing(A, Ci, Ki, nse[i]);
 			element_prod_pairing(B, Ci, Ki, nse[i]);
 			element_mul(M, A, B);
