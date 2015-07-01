@@ -1,6 +1,7 @@
 #!/bin/bash
 
-sizes="5 6 7 8 9 10"
+#sizes="5 6 7 8 9 10"
+sizes="7 8 9 10"
 depths="10 0.5 0.4 0.3 0.2 0.1"
 coverages="0.02 0.04 0.06 0.08 0.1"
 seeds="24125162166 12512616216 254125521 20958359219 2012904219"
@@ -42,7 +43,7 @@ stage2 ()
     # gray encoding
     stage3 ${genout} ""
     # hierarchical
-    stage3 ${genout} "-h"
+    #stage3 ${genout} "-h"
 
     for depth in ${depths}; do
         ./cover -i ${genout} -o ${cover} -d $depth
@@ -50,7 +51,7 @@ stage2 ()
         # gray encoding
         stage3 ${cover} ""
         # hierarchical
-        stage3 ${cover} "-h"
+        #stage3 ${cover} "-h"
     done
 }
 
@@ -73,7 +74,7 @@ for size in ${sizes}; do
             # Gaussian tests
             start_test ${size} ${seed} ${coverage} ""
             # uniform tests
-            start_test ${size} ${seed} ${coverage} "-u"
+            #start_test ${size} ${seed} ${coverage} "-u"
         done
     done
     echo ""
