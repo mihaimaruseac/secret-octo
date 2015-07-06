@@ -6,4 +6,6 @@ espresso
 compute
 param_generator
 output/
+params/
 param
+full_grids/
