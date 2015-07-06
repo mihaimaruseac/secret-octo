@@ -6,6 +6,7 @@ depths="10 0.5 0.4 0.3 0.2 0.1"
 coverages="0.02 0.04 0.06 0.08 0.1"
 seeds="24125162166 12512616216 254125521 20958359219 2012904219"
 
+# ../orig/espresso/espresso -Dminterms ../orig/espresso/sampleFile | ../orig/espresso/espresso -sxDintersect - ../orig/espresso/full3
 espresso="../orig/espresso/espresso -s"
 
 genout="/tmp/test.zone"
