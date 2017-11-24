@@ -1,2 +1,3 @@
 # secret-octo
-TODO
+
+Some experiments with crypto and bits.
