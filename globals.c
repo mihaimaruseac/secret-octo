@@ -87,7 +87,7 @@ int bsearch_i(const void *key, const void *base, size_t nmemb, size_t size,
 	return -low-1;
 }
 
-inline double noisy_div(double x, double y, double t)
+double noisy_div(double x, double y, double t)
 {
 	// TODO: abs tests
 	// TODO: abs on y?
@@ -97,14 +97,14 @@ inline double noisy_div(double x, double y, double t)
 }
 
 #define MICROSECONDS 1000000L
-inline long time_diff(struct timeval *tv1, struct timeval *tv2)
+long time_diff(struct timeval *tv1, struct timeval *tv2)
 {
 	long t1 = tv1->tv_sec * MICROSECONDS + (0.0 + tv1->tv_usec);
 	long t2 = tv2->tv_sec * MICROSECONDS + (0.0 + tv2->tv_usec);
 	return t2 - t1;
 }
 
-inline int lnp2(int x)
+int lnp2(int x)
 {
 	x--;
 	x |= x >> 1;

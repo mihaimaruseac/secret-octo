@@ -57,12 +57,12 @@ int bsearch_i(const void *key, const void *base, size_t nmemb, size_t size,
 		int (*compar)(const void *, const void *));
 
 /* divide x by y only if y is at least t (avoid noisy division by 0 */
-inline double noisy_div(double x, double y, double t);
+double noisy_div(double x, double y, double t);
 
 /* time difference */
 struct timeval;
-inline long time_diff(struct timeval *tv1, struct timeval *tv2);
+long time_diff(struct timeval *tv1, struct timeval *tv2);
 
 /* compute log(next_power_of_2(x)) */
-inline int lnp2(int x);
+int lnp2(int x);
 #endif
